@@ -7,9 +7,12 @@ dh3 ansible_ssh_host=192.168.56.23 ansible_ssh_private_key_file=/vagrant/.vagran
 dh1
 
 [consulserver]
-master
+master consul_is_ui=true
 dh1
 dh2
+
+[consulserver:vars]
+consul_version=0.6.4
 
 [swarmhosts]
 dh[1:3]

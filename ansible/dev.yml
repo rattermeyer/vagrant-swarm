@@ -2,3 +2,7 @@
 - hosts: dockerhosts
   roles:
     - docker_ubuntu
+
+- hosts: consulserver 
+  roles:
+    - ansible_consul
