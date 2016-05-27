@@ -52,7 +52,11 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     vm_config.vm.provision "shell", path: "scripts/ansible.sh"
-    vm_config.vm.provision "shell", inline: "cd /vagrant/ansible && ansible-playbook -b -vv -i inventory dev.yml && cd -"
+    vm_config.vm.provision "shell" do |s|
+      s.inline = "echo ANSIBLE_CONFIG=$ANSIBLE_CONFIG && cd /vagrant/ansible && ansible-playbook -b -vv -i inventory dev.yml && cd -"
+      s.privileged = false
+      s.env = { :ANSIBLE_CONFIG => '/vagrant/ansible/ansible.cfg' }
+    end
   end
 
 end

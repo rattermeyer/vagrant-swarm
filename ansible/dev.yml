@@ -1,4 +1,4 @@
 ---
-- hosts: all
+- hosts: dockerhosts
   roles:
     - docker_ubuntu
