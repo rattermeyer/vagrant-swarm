@@ -52,6 +52,7 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     vm_config.vm.provision "shell", path: "scripts/ansible.sh"
+    vm_config.vm.provision "shell", inline: "cd /vagrant/ansible && ansible-playbook -b -vv -i inventory dev.yml && cd -"
   end
 
 end
