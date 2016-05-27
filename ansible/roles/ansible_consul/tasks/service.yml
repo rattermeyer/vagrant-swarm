@@ -1,4 +1,0 @@
-- service: >
-    name=consul
-    state=started
-    enabled=yes
