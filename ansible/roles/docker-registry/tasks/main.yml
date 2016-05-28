@@ -1,0 +1,11 @@
+---
+# tasks file for docker-registry
+- name: create docker-registry container
+  docker_container:
+    name: registry
+    image: "registry:2"
+    restart_policy: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - "{{registry_data_dir}}:/var/lib/registry"

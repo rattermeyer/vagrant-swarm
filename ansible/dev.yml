@@ -1,8 +1,14 @@
 ---
 - hosts: dockerhosts
   roles:
-    - docker_ubuntu
+    - docker-ubuntu
 
-- hosts: consulserver
+- hosts: dockerregistry
   roles:
-    - savagegus.consul
+    - docker-registry
+  tags:
+    - docker-registry
+
+#- hosts: consulserver
+#  roles:
+#    - savagegus.consul
