@@ -1,0 +1,26 @@
+---
+# tasks file for docker-images
+- git: repo=https://github.com/rattermeyer/dockerfiles.git
+       dest=/srv/dockerfiles
+
+- name: Build alpine base image and push it to a private repo
+  docker_image:
+    path: /srv/dockerfiles/base/alpine
+    name: rattermeyer/alpine
+    repository: master:5000/rattermeyer/alpine
+    tag: latest
+    state: present
+
+- name: Build consul image and push it to a private repo
+  docker_image:
+    path: /srv/dockerfiles/consul
+    name: rattermeyer/consul
+    repository: master:5000/rattermeyer/consul
+    tag: latest
+    state: present
+
+- name: Push to repo
+  command: docker push {{item}}
+  with_items:
+    - master:5000/rattermeyer/alpine
+    - master:5000/rattermeyer/consul
