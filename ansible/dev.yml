@@ -1,9 +1,13 @@
 ---
 - hosts: dockerhosts
+  tasks:
+    - apt: upgrade=dist update_cache=yes
   roles:
     - docker-ubuntu
 
 - hosts: dockerregistry
+  tasks:
+    - apt: upgrade=dist update_cache=yes
   roles:
     - docker-registry
     - docker-images
