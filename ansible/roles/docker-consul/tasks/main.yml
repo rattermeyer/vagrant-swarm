@@ -1,2 +1,7 @@
 ---
 # tasks file for docker-consul
+- name: create consul server
+  docker_container:
+    name: consulserver
+    state: present
+    image: "192.168.56.10:5000/consul"

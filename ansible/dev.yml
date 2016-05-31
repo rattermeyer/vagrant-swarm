@@ -14,6 +14,15 @@
   tags:
     - docker-registry
 
+- hosts: all
+  roles:
+    - dnsmasq
+  tags:
+    - dnsmasq
+
 #- hosts: consulserver
 #  roles:
-#    - savagegus.consul
+#    - docker-consul
+#  tags:
+#    - consul
+#

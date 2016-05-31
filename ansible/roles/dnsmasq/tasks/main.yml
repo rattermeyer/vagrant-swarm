@@ -1,0 +1,5 @@
+---
+# tasks file for dnsmasq
+- name: install dnsmasq
+  apt: name=dnsmasq state=present
+  notify: ['Test and restart dnsmasq']
