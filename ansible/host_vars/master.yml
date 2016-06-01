@@ -1,0 +1,7 @@
+hosts_entries:
+  - "192.168.56.10 master.swarm master"
+  - "192.168.56.21 dh1.swarm dh1"
+  - "192.168.56.22 dh2.swarm dh1"
+  - "192.168.56.23 dh3.swarm dh1"
+dnsmasq_conflines:
+  - "local=/swarm/"
