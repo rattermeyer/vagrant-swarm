@@ -13,12 +13,9 @@ dh2
 dh3
 
 [consulserver]
-master consul_is_ui=true
+master
 dh1
 dh2
-
-[consulserver:vars]
-consul_version=0.6.4
 
 [swarmhosts]
 dh[1:3]

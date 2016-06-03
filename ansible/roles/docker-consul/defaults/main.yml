@@ -1,2 +1,14 @@
 ---
 # defaults file for docker-consul
+consul_data_dir: "/data/consul"
+consul_conf_dir: "/data/consul/config"
+consul_server: "false"
+consl_dns_port: 8600
+consul_httpapi_port: 8500
+consul_rpc_port: 8400
+consul_serflan_port: 8301
+consul_serfwan_port: 8302
+consul_serverrpc_port: 8300
+consul_join_interval: "30s"
+consul_interface: "eth1"
+consul_ipaddress: "{{hostvars[inventory_hostname]['ansible_'+ consul_interface]['ipv4']['address']}}"

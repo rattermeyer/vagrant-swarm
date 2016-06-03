@@ -4,15 +4,13 @@
     - apt: upgrade=dist update_cache=yes
   roles:
     - docker-ubuntu
+  tags:
+    - docker
 
 - hosts: dockerregistry
-  tasks:
-    - apt: upgrade=dist update_cache=yes
-  roles:
-    - docker-registry
-    - docker-images
   tags:
     - docker-registry
+    - docker-images
 
 - hosts: all
   roles:
@@ -20,9 +18,8 @@
   tags:
     - dnsmasq
 
-#- hosts: consulserver
-#  roles:
-#    - docker-consul
-#  tags:
-#    - consul
-#
+- hosts: consulserver
+  roles:
+    - docker-consul
+  tags:
+    - consul

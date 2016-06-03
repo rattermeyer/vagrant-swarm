@@ -1,7 +1,13 @@
 ---
 # tasks file for docker-consul
+- name: create-consul data dir
+  file: path="{{consul_data_dir}}" state=directory
+- name: create-consul conf dir
+  file: path="{{consul_conf_dir}}" state=directory
+- name: create consul config
+  template: src="consul-config.json.j2" dest="{{consul_conf_dir}}/consul-config.json"
 - name: create consul server
   docker_container:
     name: consulserver
     state: present
-    image: "192.168.56.10:5000/consul"
+    image: "master.swarm:5000/consul"
