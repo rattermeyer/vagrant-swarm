@@ -1,0 +1,6 @@
+consul_server: true
+consul_version: 0.6.4
+consul_join:
+  - "master.swarm"
+  - "dh1.swarm"
+  - "dh2.swarm"

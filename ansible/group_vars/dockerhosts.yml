@@ -1,0 +1,6 @@
+docker_opts: >
+  -H unix://
+  -H tcp://0.0.0.0:2375
+  --dns 192.168.56.10
+  --dns 8.8.8.8 --dns 8.8.4.4
+  --insecure-registry master.swarm:5000
