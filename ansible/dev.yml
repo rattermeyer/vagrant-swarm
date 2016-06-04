@@ -26,3 +26,9 @@
     - docker-consul
   tags:
     - consul
+
+- hosts: swarmhosts
+  roles:
+    - docker-swarm
+  tags:
+    - swarm

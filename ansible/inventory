@@ -22,5 +22,12 @@ master1
 master2
 controller
 
-[swarmhosts]
+[swarmmanager]
+master[1:2]
+
+[swarmmembers]
 dh[1:3]
+
+[swarmhosts:children]
+swarmmanager
+swarmmembers

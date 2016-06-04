@@ -1,0 +1,6 @@
+swarm_advertise_ip: "{{hostvars[inventory_hostname]['ansible_'+ consul_interface]['ipv4']['address']}}"
+swarm_command:
+  - "join"
+  - "--advertise"
+  - "{{swarm_advertise_ip}}:2375"
+  - "consul://{{consul_address}}"

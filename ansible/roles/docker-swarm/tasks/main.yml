@@ -1,2 +1,12 @@
 ---
 # tasks file for docker-swarm
+- name: create docker-swarm container
+  docker_container:
+    name: swarm
+    image: "swarm"
+    state: started
+    recreate: yes
+    restart_policy: always
+    ports:
+      - "12375:2375"
+    command: "{{swarm_command}}"

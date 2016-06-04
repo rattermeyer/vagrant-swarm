@@ -1,0 +1,4 @@
+consul_interface: "eth1"
+consul_address: "192.168.56.11:8500"
+dnsmasq_conflines:
+  - "server=/swarm/192.168.56.10"
