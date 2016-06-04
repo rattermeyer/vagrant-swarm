@@ -16,6 +16,8 @@ Vagrant.configure(2) do |config|
   # VirtualBox Configuration
 
   machines = {
+               :master1 => {:ip => '192.168.56.11', :box => 'ubuntu/trusty64', :mem => '512', :cpu => 1 },
+               :master2 => {:ip => '192.168.56.12', :box => 'ubuntu/trusty64', :mem => '512', :cpu => 1 },
                :dh1     => {:ip => '192.168.56.21', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
                :dh2     => {:ip => '192.168.56.22', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
                :dh3     => {:ip => '192.168.56.23', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
@@ -32,6 +34,7 @@ Vagrant.configure(2) do |config|
        reserved_mem = machine_details[:mem] || default_mem
        reserved_cpu = machine_details[:cpu] || default_cpu
        vb.name = machine_name.to_s
+       vb.customize ["modifyvm", :id, "--groups", "/Swarm"]
        vb.customize ["modifyvm", :id, "--memory", reserved_mem]
        vb.customize ["modifyvm", :id, "--cpus", reserved_cpu]
        vb.gui = false
@@ -41,12 +44,13 @@ Vagrant.configure(2) do |config|
    end # machine_config
   end # machines
 
-  config.vm.define "master" do |vm_config|
+  config.vm.define "controller" do |vm_config|
     vm_config.vm.box = "ubuntu/trusty64"
-    vm_config.vm.hostname = "master"
+    vm_config.vm.hostname = "controller"
     vm_config.vm.network :private_network, ip: "192.168.56.10"
     vm_config.vm.provider :virtualbox do |vb|
-      vb.name = "master"
+      vb.name = "controller"
+      vb.customize ["modifyvm", :id, "--groups", "/Swarm"]
       vb.customize ["modifyvm", :id, "--memory", 512]
       vb.customize ["modifyvm", :id, "--cpus", 1]
       vb.gui = false

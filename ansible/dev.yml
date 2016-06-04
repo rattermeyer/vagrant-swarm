@@ -8,6 +8,9 @@
     - docker
 
 - hosts: dockerregistry
+  roles:
+    - docker-registry
+    - docker-images
   tags:
     - docker-registry
     - docker-images

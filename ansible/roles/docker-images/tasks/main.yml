@@ -7,7 +7,7 @@
 #  docker_image:
 #    path: /srv/dockerfiles/base/alpine
 #    name: rattermeyer/alpine
-#    repository: master:5000/rattermeyer/alpine
+#    repository: "{{docker_repository}}/rattermeyer/alpine"
 #    tag: latest
 #    state: present
 #
@@ -15,13 +15,13 @@
 #  docker_image:
 #    path: /srv/dockerfiles/consul
 #    name: rattermeyer/consul
-#    repository: master:5000/rattermeyer/consul
+#    repository: "{{docker_repository}}/rattermeyer/consul"
 #    tag: latest
 #    state: present
 #
 - name: build images
   command: docker build --tag "{{docker_repository}}/rattermeyer/alpine":latest /srv/dockerfiles/base/alpine
-- command: docker build --tag "{{docker_repository}}/rattermeyer/alpine":latest /srv/dockerfiles/consul
+- command: docker build --tag "{{docker_repository}}/rattermeyer/consul":latest /srv/dockerfiles/consul
 
 - name: push to repo
   command: docker push {{item}}

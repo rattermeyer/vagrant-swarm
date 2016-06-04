@@ -11,7 +11,7 @@
     name: "consulserver"
     state: started
     recreate: yes
-    image: "master.swarm:5000/rattermeyer/consul"
+    image: "master1.swarm:5000/rattermeyer/consul"
     volumes:
       - "{{consul_conf_dir}}:/config"
       - "{{consul_data_dir}}:/data"

@@ -6,9 +6,8 @@
 - name: update hosts
   lineinfile: dest=/etc/hosts line="{{item}}"
   with_items: "{{hosts_entries|default([])}}"
+  notify: ['Test and restart dnsmasq']
 - name: update dnsmasq.conf
   lineinfile: dest=/etc/dnsmasq.conf line="{{item}}"
   with_items: "{{dnsmasq_conflines|default([])}}"
-#- name: use first
-#  lineinfile: dest=/etc/resolvconf/resolv.conf.d/head line="nameserver 192.168.56.10"
-#  when: "{{ansible_hostname=='dh1d'}}"
+  notify: ['Test and restart dnsmasq']
