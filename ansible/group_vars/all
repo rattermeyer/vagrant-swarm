@@ -1,3 +1,4 @@
+docker_registry: "master1.swarm:5000"
 consul_interface: "eth1"
 consul_address: "192.168.56.11:8500"
 dnsmasq_conflines:

@@ -8,6 +8,7 @@
     - docker
 
 - hosts: dockerregistry
+  gather_facts: false
   roles:
     - docker-registry
     - docker-images
@@ -16,19 +17,29 @@
     - docker-images
 
 - hosts: all
+  gather_facts: false
   roles:
     - dnsmasq
   tags:
     - dnsmasq
 
 - hosts: consulserver
+  gather_facts: false
   roles:
     - docker-consul
   tags:
     - consul
 
 - hosts: swarmhosts
+  gather_facts: false
   roles:
     - docker-swarm
   tags:
     - swarm
+
+- hosts: vaults
+  gather_facts: false
+  roles:
+    - docker-vault
+  tags:
+    - vault

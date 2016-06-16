@@ -25,6 +25,9 @@ controller
 [swarmmanager]
 master[1:2]
 
+[vaults]
+master1
+
 [swarmmembers]
 dh[1:3]
 

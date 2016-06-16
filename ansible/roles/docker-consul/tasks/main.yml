@@ -1,5 +1,15 @@
 ---
 # tasks file for docker-consul
+- name: stop consul
+  docker_container:
+     name: consul
+     state: absent
+     keep_volumes: false
+#- name: remove directories
+#  file: path={{item}} state=absent
+#  with_items:
+#    - "{{consul_data_dir}}"
+#    - "{{consul_conf_dir}}"
 - name: create-consul data dir
   file: path="{{consul_data_dir}}" state=directory
 - name: create-consul conf dir
@@ -12,6 +22,7 @@
     state: started
     recreate: yes
     image: "master1.swarm:5000/rattermeyer/consul"
+    keep_volumes: false
     volumes:
       - "{{consul_conf_dir}}:/config"
       - "{{consul_data_dir}}:/data"

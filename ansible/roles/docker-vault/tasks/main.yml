@@ -1,0 +1,12 @@
+---
+# tasks file for docker-vault
+- name: start vault server
+  docker_container:
+    image: "{{docker_registry}}/rattermeyer/vault"
+    name: vault
+    state: started
+    recreate: true
+    capabilities:
+      - "IPC_LOCK"
+    etc_hosts:
+      consul: "{{hostvars['master1']['ansible_eth0']['ipv4']['address']}}"
