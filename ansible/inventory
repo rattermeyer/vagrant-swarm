@@ -20,7 +20,7 @@ dh3
 [consulserver]
 master1
 master2
-controller
+dh1
 
 [swarmmanager]
 master[1:2]

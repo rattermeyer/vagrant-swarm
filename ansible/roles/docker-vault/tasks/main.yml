@@ -1,12 +1,48 @@
 ---
 # tasks file for docker-vault
+- name: ensure directory exists
+  file: path=/data/vault/config state=directory
+- name: copy vault config
+  template:
+    src: vault-config.j2
+    dest: /data/vault/config/vault-config.json
 - name: start vault server
   docker_container:
     image: "{{docker_registry}}/rattermeyer/vault"
     name: vault
     state: started
     recreate: true
+    volumes:
+      - "/data/vault/config/vault-config.json:/config/vault-config.json"
+    published_ports:
+      - "8200:8200"
+      - "8125:8125"
+    env:
+      VAULT_ADDR: "http://127.0.0.1:8200"
     capabilities:
       - "IPC_LOCK"
     etc_hosts:
       consul: "{{hostvars['master1']['ansible_eth0']['ipv4']['address']}}"
+
+- name: install vault alias
+  lineinfile:
+    dest=/home/vagrant/.bashrc
+    line="alias vault='docker exec -it vault vault \"$@\"'"
+    state="{{vault_alias_state | default('present')}}"
+
+- name: check if vault server is initialized
+  uri: url=http://localhost:8200/v1/sys/init
+  register: vault_init_state
+
+- name: debug initialized
+  set_fact:
+    vault_initialized: "{{ vault_init_state.json.initialized }}"
+
+- name: init vault, if not initialized
+  uri:
+    url: "http://localhost:8200/v1/sys/init"
+    method: PUT
+    body: >
+      {"secret_shares": 5, "secret_threshold": 3}
+  register: vault_init_response
+  when: not vault_initialized

@@ -1,9 +1,10 @@
 ---
 - hosts: dockerhosts
+  gather_facts: false
   tasks:
     - apt: upgrade=dist update_cache=yes
   roles:
-    - docker-ubuntu
+    - { role: docker-ubuntu, docker_group_members: ["vagrant"]}
   tags:
     - docker
 
@@ -38,7 +39,6 @@
     - swarm
 
 - hosts: vaults
-  gather_facts: false
   roles:
     - docker-vault
   tags:

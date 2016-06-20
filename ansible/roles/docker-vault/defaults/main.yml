@@ -1,2 +1,5 @@
 ---
 # defaults file for docker-vault
+consul_host: consul
+consul_port: 8500
+vault_path: vault

@@ -19,7 +19,7 @@
 - name: create consul server
   docker_container:
     name: "consulserver"
-    state: started
+    state: "{{consul_container_state | default('started') }}"
     recreate: yes
     image: "master1.swarm:5000/rattermeyer/consul"
     keep_volumes: false
