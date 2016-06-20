@@ -46,3 +46,5 @@
       {"secret_shares": 5, "secret_threshold": 3}
   register: vault_init_response
   when: not vault_initialized
+
+- debug: msg="{{vault_init_response}}"

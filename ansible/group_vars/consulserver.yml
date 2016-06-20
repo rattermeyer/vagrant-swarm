@@ -3,4 +3,4 @@ consul_version: 0.6.4
 consul_join:
   - "master1.swarm"
   - "master2.swarm"
-  - "controller.swarm"
+  - "dh1.swarm"

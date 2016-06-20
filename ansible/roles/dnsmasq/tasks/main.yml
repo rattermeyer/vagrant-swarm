@@ -9,5 +9,5 @@
   notify: ['Test and restart dnsmasq']
 - name: update dnsmasq.conf
   lineinfile: dest=/etc/dnsmasq.conf line="{{item}}"
-  with_items: "{{dnsmasq_conflines|default([])}}"
+  with_items: "{{dnsmasq_conflines | default([])}}"
   notify: ['Test and restart dnsmasq']

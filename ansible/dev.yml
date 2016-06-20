@@ -1,6 +1,5 @@
 ---
 - hosts: dockerhosts
-  gather_facts: false
   tasks:
     - apt: upgrade=dist update_cache=yes
   roles:
@@ -38,8 +37,8 @@
   tags:
     - swarm
 
-- hosts: vaults
-  roles:
-    - docker-vault
-  tags:
-    - vault
+#- hosts: vaults
+#  roles:
+#    - docker-vault
+#  tags:
+#    - vault
