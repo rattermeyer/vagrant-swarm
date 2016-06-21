@@ -10,11 +10,8 @@
 - hosts: dockerregistry
   gather_facts: false
   roles:
-    - docker-registry
-    - docker-images
-  tags:
-    - docker-registry
-    - docker-images
+    - { role: docker-registry, tags: ['docker-registry']}
+    - { role: docker-images, tags: ['docker-images']}
 
 - hosts: all
   gather_facts: false
