@@ -16,7 +16,5 @@
     - {path: "consul", name: "{{docker_repository}}/rattermeyer/consul", repo: "{{docker_repository}}/rattermeyer/consul"}
     - {path: "consul", name: "rattermeyer/consul", repo: "rattermeyer/consul"}
 
-#- name: build images
-#  command: docker build --tag "{{docker_repository}}/rattermeyer/alpine":latest /srv/ dockerfiles/base/alpine
-#- command: docker build --tag "{{docker_repository}}/rattermeyer/consul":latest /srv/dockerfiles/consul
-#- command: docker build --tag "{{docker_repository}}/rattermeyer/vault":latest /srv/dockerfiles/vault
+- name: Somehow the push does not work, so do it again
+  command: docker push "{{docker_repository}}/rattermeyer/consul"

@@ -5,11 +5,12 @@
      name: consul
      state: absent
      keep_volumes: false
-#- name: remove directories
-#  file: path={{item}} state=absent
-#  with_items:
-#    - "{{consul_data_dir}}"
-#    - "{{consul_conf_dir}}"
+- name: remove directories
+  file: path={{item}} state=absent
+  with_items:
+    - "{{consul_data_dir}}"
+    - "{{consul_conf_dir}}"
+  ignore_errors: true
 - name: create-consul data dir
   file: path="{{consul_data_dir}}" state=directory
 - name: create-consul conf dir
