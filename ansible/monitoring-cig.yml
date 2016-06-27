@@ -1,0 +1,27 @@
+- hosts: influxdb
+  roles:
+    - docker-influxdb
+- hosts: all
+  tasks:
+    - name: configuration
+      template: src="templates/network.conf.j2" dest="/etc/collectd/collectd.conf.d/network.conf"
+      notify: restart collectd
+    - name: install collectd
+      apt: name=collectd install_recommends=true
+  handlers:
+    - name: restart collectd
+      service: name=collectd state=restarted
+  tags:
+    - collectd
+
+- hosts: grafana
+  tasks:
+    - name: install grafana
+      docker_container:
+        name: grafana
+        image: grafana/grafana
+        ports:
+          - "3000:3000"
+#
+#- hosts: all
+#    - name: install prometheus node-exporter

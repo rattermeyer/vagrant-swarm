@@ -1,0 +1,37 @@
+---
+# tasks file for docker-influxdb
+- name: ensure directory
+  file: path="{{influxdb_config_dir}}" state=directory
+- name: copy influxdb config
+  template: src="{{role_path}}/templates/influxdb.conf.j2" dest="{{influxdb_config_path}}"
+- name: Install influxdb
+  docker_container:
+    name: influxdb
+    image: influxdb
+    recreate: true
+    exposed:
+      - "25826/udp"
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "25826:25826/udp"
+    volumes:
+      - "/data/influxdb/data:/var/lib/influxdb"
+      - "/data/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
+      - "/usr/share/collectd/types.db:/usr/share/collectd/types.db:ro"
+    command:
+      - "-config"
+      - "/etc/influxdb/influxdb.conf"
+
+- name: Wait for influxdb
+  wait_for:
+    port: "8086"
+    delay: 10
+
+- name: Create Database
+  uri:
+    url: http://localhost:8086/query
+    method: POST
+    body: "q=CREATE%20DATABASE%20collectd"
+    body_format: raw
+    HEADER_Content-Type: "application/x-www-form-urlencoded"

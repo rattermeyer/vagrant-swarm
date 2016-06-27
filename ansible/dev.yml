@@ -7,18 +7,18 @@
   tags:
     - docker
 
-- hosts: dockerregistry
-  gather_facts: false
-  roles:
-    - { role: docker-registry, tags: ['docker-registry']}
-    - { role: docker-images, tags: ['docker-images']}
-
 - hosts: all
   gather_facts: false
   roles:
     - dnsmasq
   tags:
     - dnsmasq
+
+- hosts: dockerregistry
+  gather_facts: false
+  roles:
+    - { role: docker-registry, tags: ['docker-registry']}
+    - { role: docker-images, tags: ['docker-images']}
 
 - hosts: consulserver
   gather_facts: false
@@ -34,8 +34,8 @@
   tags:
     - swarm
 
-#- hosts: vaults
-#  roles:
-#    - docker-vault
-#  tags:
-#    - vault
+- hosts: vaults
+  roles:
+    - docker-vault
+  tags:
+    - vault

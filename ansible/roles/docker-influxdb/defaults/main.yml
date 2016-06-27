@@ -1,0 +1,4 @@
+---
+# defaults file for docker-influxdb
+influxdb_config_dir: "/data/influxdb/"
+influxdb_config_path: "{{influxdb_config_dir}}influxdb.conf"

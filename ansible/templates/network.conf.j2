@@ -1,0 +1,5 @@
+# collectd network configuration template
+LoadPlugin network
+<Plugin "network">
+    Server "{{influxdb_server | mandatory}}" "{{influxdb_port | default('25826')}}"
+</Plugin>
