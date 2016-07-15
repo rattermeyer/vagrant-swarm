@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
    end # machine_config
   end # machines
 
-  config.vm.define "controller", autostart: false do |vm_config|
+  config.vm.define "controller", autostart: true do |vm_config|
     vm_config.vm.box = "ubuntu/trusty64"
     vm_config.vm.hostname = "controller"
     vm_config.vm.network :private_network, ip: "192.168.56.10"
