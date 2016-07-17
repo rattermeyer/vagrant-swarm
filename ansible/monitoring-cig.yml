@@ -1,6 +1,7 @@
 - hosts: influxdb
   roles:
     - docker-influxdb
+
 - hosts: all
   tasks:
     - name: configuration
@@ -8,6 +9,20 @@
       notify: restart collectd
     - name: install collectd
       apt: name=collectd install_recommends=true
+    - name: install cadvisor
+      docker: 
+        name: "cadvisor"
+        image: "google/advisor"
+        tag: "latest"
+        volumes:
+          - "/:/rootfs:ro"
+          - "/var/run:/var/run:rw"
+          - "/sys:/sys:ro"
+          - "/var/lib/docker/:/var/lib/docker:ro"
+        ports:
+          - "8080:8080"
+        command: "-storage_driver_db=cadvisor -storage_driver_host=influxsrv:8086"
+
   handlers:
     - name: restart collectd
       service: name=collectd state=restarted

@@ -1,3 +1,6 @@
 dnsmasq_conflines:
   - "server=/swarm/192.168.56.10"
   - "server=/consul/192.168.56.11#8600"
+apt_repository_flavor: experimental
+# cluster-store and cluster-advertise for standalone swarm
+#docker_opts: "-H unix:// -H tcp://0.0.0.0:2375 --dns 192.168.56.10 --dns 8.8.8.8 --dns 8.8.4.4 --insecure-registry {{docker_registry}} #--cluster-store=consul://{{consul_address}} --cluster-advertise={{consul_interface}}:2375"

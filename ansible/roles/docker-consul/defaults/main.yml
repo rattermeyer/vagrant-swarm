@@ -10,7 +10,7 @@ consul_serflan_port: 8301
 consul_serfwan_port: 8302
 consul_serverrpc_port: 8300
 consul_join_interval: "30s"
-consul_interface: "eth1"
+consul_interface: "enp0s8"
 consul_ipaddress: "{{hostvars[inventory_hostname]['ansible_'+ consul_interface]['ipv4']['address']}}"
 consul_nodename: "{{inventory_hostname}}"
 consul_bootstrap_expect: 3

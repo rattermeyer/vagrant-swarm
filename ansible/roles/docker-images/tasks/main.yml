@@ -4,7 +4,7 @@
        dest=/srv/dockerfiles
 
 - name: Wait for Registry
-  wait_for: host="master1.swarm" port=8500 delay=5 timeout=120
+  wait_for: host="master1.swarm" port=5000 delay=5 timeout=120
 
 - name: Build images and push it to a private repo
   docker_image:

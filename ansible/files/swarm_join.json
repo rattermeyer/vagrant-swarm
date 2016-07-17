@@ -1,0 +1,7 @@
+{
+  "ListenAddr": "{{listen_address | default('0.0.0.0:4500')}}",
+  "RemoteAddrs": ["{{ manager_node | default('master1.swarm:4500')}}"],
+  "Secret": "{{secret_token | default('')}}",
+  "CACertHash": "{{ca_cert_hash | default('')}}",
+  "Manager": {{ join_as_manager | default('false') }}
+}

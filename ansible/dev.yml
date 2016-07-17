@@ -1,9 +1,7 @@
 ---
 - hosts: dockerhosts
-  tasks:
-    - apt: upgrade=dist update_cache=yes
   roles:
-    - { role: docker-ubuntu, docker_group_members: ["vagrant"]}
+    - { role: docker-ubuntu-2, docker_group_members: ["vagrant"], kernel_update_and_reboot_permitted: true}
   tags:
     - docker
 
@@ -21,19 +19,62 @@
     - { role: docker-images, tags: ['docker-images']}
 
 - hosts: consulserver
-  gather_facts: false
   roles:
     - docker-consul
   tags:
     - consul
 
-- hosts: swarmhosts
-  gather_facts: false
-  roles:
-    - docker-swarm
-  tags:
-    - swarm
 
+#- hosts: swarmhosts
+#  gather_facts: false
+#  roles:
+#    - docker-ubuntu-2
+#    - docker-swarm
+#  tags:
+#    - swarm
+
+- hosts: master1
+  tasks:
+    - block:
+      - set_fact:
+          init_body: "{{ lookup( 'file', 'swarm_init.json' ) }}"
+      - debug: msg="{{init_body }}"
+      - name: create swarm
+        uri:
+          url: "http://master1.swarm:2375/swarm/init"
+          method: POST
+          return_content: true
+          HEADER_Content_Type: "application/json"
+          body: "{{init_body }}"
+          body_format: json
+        register: swarm_init_result
+        failed_when: swarm_init_result.status >= 500
+      - set_fact:
+          secret: "{{swarm_init_result.json}}"
+      - name: debug
+        debug: msg="{{secret}}"
+      tags: swarm
+- hosts: swarmmembers
+  tasks:
+    - block:
+      - set_fact:
+          join_body: "{{ lookup( 'file', 'swarm_join.json' ) }}"
+      - debug: msg="{{join_body }}"
+      - name: join swarm
+        uri:
+          url: "http://{{inventory_hostname}}.swarm:2375/swarm/join"
+          method: POST
+          return_content: true
+          HEADER_Content_Type: "application/json"
+          body: "{{ join_body }}"
+          body_format: json
+        register: swarm_join_result
+        failed_when: swarm_join_result.status >= 500
+      - name: debug
+        debug: msg="{{swarm_join_result}}"
+      tags:
+        - swarm
+        - swarm_join
 - hosts: vaults
   roles:
     - docker-vault

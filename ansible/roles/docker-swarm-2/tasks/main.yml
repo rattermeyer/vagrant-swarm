@@ -1,0 +1,9 @@
+---
+# tasks file for docker-swarm
+- name: create swarm
+  uri:
+    url: "http://master1.swarm:2375/swarm/init"
+    method: POST
+    return_content: true
+    HEADER_Content_Type: "application/json"
+    body: "{{ lookup( 'file', 'swarm_init.json' ) | to_json }}"

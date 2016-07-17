@@ -16,11 +16,12 @@ Vagrant.configure(2) do |config|
   # VirtualBox Configuration
 
   machines = {
-               :master1 => {:ip => '192.168.56.11', :box => 'ubuntu/trusty64', :mem => '512', :cpu => 1 },
-               :master2 => {:ip => '192.168.56.12', :box => 'ubuntu/trusty64', :mem => '512', :cpu => 1 },
-               :dh1     => {:ip => '192.168.56.21', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
-               :dh2     => {:ip => '192.168.56.22', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
-               :dh3     => {:ip => '192.168.56.23', :box => 'ubuntu/trusty64', :mem => '1024', :cpu => 1 },
+               :master1 => {:ip => '192.168.56.11', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '512', :cpu => 1 },
+               :master2 => {:ip => '192.168.56.12', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '512', :cpu => 1 },
+               :master3 => {:ip => '192.168.56.13', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '512', :cpu => 1 },
+               :dh1     => {:ip => '192.168.56.21', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '1024', :cpu => 1 },
+               :dh2     => {:ip => '192.168.56.22', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '1024', :cpu => 1 },
+               :dh3     => {:ip => '192.168.56.23', :box => 'ffuenf/ubuntu-16.04-server-amd64', :mem => '1024', :cpu => 1 },
              }
 
   machines.each do |machine_name, machine_details|
@@ -45,7 +46,7 @@ Vagrant.configure(2) do |config|
   end # machines
 
   config.vm.define "controller", autostart: true do |vm_config|
-    vm_config.vm.box = "ubuntu/trusty64"
+    vm_config.vm.box = "ffuenf/ubuntu-16.04-server-amd64"
     vm_config.vm.hostname = "controller"
     vm_config.vm.network :private_network, ip: "192.168.56.10"
     vm_config.vm.provider :virtualbox do |vb|

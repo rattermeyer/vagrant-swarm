@@ -1,0 +1,22 @@
+{
+  "ListenAddr": "{{ listen_address | default('0.0.0.0:4500') }}",
+  "ForceNewCluster": {{ force_new_cluster | default('false') }},
+  "Spec": {
+    "AcceptancePolicy": {
+      "Policies": [
+        {
+          "Role": "MANAGER",
+          "Autoaccept": {{ auto_accept_manager | default('false') }}
+        },
+        {
+          "Role": "WORKER",
+          "Autoaccept": {{ auto_accept_worker | default('true') }}
+        }
+      ]
+    },
+    "Orchestration": {},
+    "Raft": {},
+    "Dispatcher": {},
+    "CAConfig": {}
+  }
+}
