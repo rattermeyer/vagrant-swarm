@@ -1,7 +1,7 @@
 hosts_entries:
   - "192.168.56.10 controller.swarm controller"
   - "192.168.56.11 master1.swarm master1 repository"
-  - "192.168.56.12 master2.swarm master2"
+  - "192.168.56.12 master2.swarm master2 influxdb.swarm"
   - "192.168.56.13 master3.swarm master3"
   - "192.168.56.21 dh1.swarm dh1"
   - "192.168.56.22 dh2.swarm dh2"

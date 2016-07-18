@@ -36,6 +36,12 @@
 - hosts: master1
   tasks:
     - block:
+      - name: recreate swarm
+        uri:
+          url: "http://master1.swarm:2375/swarm/leave?force=1"
+          method: POST
+          return_content: true
+        when: recreate_swarm==true
       - set_fact:
           init_body: "{{ lookup( 'file', 'swarm_init.json' ) }}"
       - debug: msg="{{init_body }}"
@@ -75,8 +81,8 @@
       tags:
         - swarm
         - swarm_join
-- hosts: vaults
-  roles:
-    - docker-vault
-  tags:
-    - vault
+#- hosts: vaults
+#  roles:
+#    - docker-vault
+#  tags:
+#    - vault

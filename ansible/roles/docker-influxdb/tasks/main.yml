@@ -32,6 +32,9 @@
   uri:
     url: http://localhost:8086/query
     method: POST
-    body: "q=CREATE%20DATABASE%20collectd"
+    body: "q=CREATE%20DATABASE%20{{item}}"
     body_format: raw
     HEADER_Content-Type: "application/x-www-form-urlencoded"
+  with_items:
+    - "collectd"
+    - "cadvisor"

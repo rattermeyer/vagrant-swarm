@@ -1,34 +1,41 @@
+- include: swarm.yml
+
+- hosts: all
+  tasks:
+    - name: install collectd
+      apt: name=collectd install_recommends=true state=present
+    - name: configuration
+      template: src="templates/network.conf.j2" dest="/etc/collectd/collectd.conf.d/network.conf"
+      notify: restart collectd
+  tags:
+    - collectd
+    - cadvisor
+  handlers:
+    - name: restart collectd
+      service: name=collectd state=restarted
+
+
 - hosts: influxdb
   roles:
     - docker-influxdb
 
-- hosts: all
+- hosts: swarmhosts
   tasks:
-    - name: configuration
-      template: src="templates/network.conf.j2" dest="/etc/collectd/collectd.conf.d/network.conf"
-      notify: restart collectd
-    - name: install collectd
-      apt: name=collectd install_recommends=true
     - name: install cadvisor
-      docker: 
+      docker_container:
         name: "cadvisor"
-        image: "google/advisor"
-        tag: "latest"
+        image: "google/cadvisor:latest"
+        restart_policy: always
+        restart: true
         volumes:
-          - "/:/rootfs:ro"
+          - "/\\:/rootfs:ro"
           - "/var/run:/var/run:rw"
           - "/sys:/sys:ro"
           - "/var/lib/docker/:/var/lib/docker:ro"
         ports:
           - "8080:8080"
-        command: "-storage_driver_db=cadvisor -storage_driver_host=influxsrv:8086"
-
-  handlers:
-    - name: restart collectd
-      service: name=collectd state=restarted
-  tags:
-    - collectd
-
+        command: "-storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb.swarm:8086"
+  tags: cadvisor
 - hosts: grafana
   tasks:
     - name: install grafana
