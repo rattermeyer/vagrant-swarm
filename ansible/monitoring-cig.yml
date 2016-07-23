@@ -34,7 +34,7 @@
           - "/var/lib/docker/:/var/lib/docker:ro"
         ports:
           - "8080:8080"
-        command: "-storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxdb.swarm:8086"
+        command: ["-storage_driver=influxdb", "-storage_driver_db=cadvisor", "-storage_driver_host=influxdb.swarm:8086"]
   tags: cadvisor
 - hosts: grafana
   tasks:

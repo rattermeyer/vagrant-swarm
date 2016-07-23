@@ -28,6 +28,7 @@
     port: "8086"
     delay: 10
 
+# This should be replaced by the influxdb_database module (?)
 - name: Create Database
   uri:
     url: http://localhost:8086/query
