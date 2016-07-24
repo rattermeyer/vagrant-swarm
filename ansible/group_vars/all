@@ -4,6 +4,11 @@ influxdb_port: "25826"
 docker_registry: "master1.swarm:5000"
 consul_interface: "enp0s8"
 consul_address: "192.168.56.11:8500"
+consul_server: false
+consul_join:
+  - "master1.swarm"
+  - "master2.swarm"
+  - "master3.swarm"
 dnsmasq_conflines:
   - "server=/swarm/192.168.56.10"
   - "server=/consul/192.168.56.11:8600"

@@ -18,7 +18,7 @@
     - { role: docker-registry, tags: ['docker-registry']}
     - { role: docker-images, tags: ['docker-images']}
 
-- hosts: consulserver
+- hosts: consulhosts
   roles:
     - docker-consul
   tags:

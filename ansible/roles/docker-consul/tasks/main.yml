@@ -19,7 +19,9 @@
   template: src="consul-config.json.j2" dest="{{consul_conf_dir}}/consul-config.json"
 - name: create consul server
   docker_container:
-    name: "consulserver"
+    name: "consul"
+    labels:
+      - "server={{consul_server}}"
     state: "{{consul_container_state | default('started') }}"
     recreate: yes
     image: "master1.swarm:5000/rattermeyer/consul"

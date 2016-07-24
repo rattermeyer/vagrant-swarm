@@ -23,6 +23,15 @@ master1
 master2
 master3
 
+[consulagents]
+dh1
+dh2
+dh3
+
+[consulhosts:children]
+consulserver
+consulagents
+
 [swarmmanager]
 master[1:3]
 

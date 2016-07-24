@@ -26,6 +26,8 @@
     "retry_interval": "{{consul_join_interval}}",
     "rejoin_after_leave": true,
     {% endif %}
+    {% if consul_server %}
     "bootstrap_expect": {{consul_bootstrap_expect}},
+    {% endif %}
     "node_name": "{{consul_nodename}}"
 }
