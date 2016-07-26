@@ -24,6 +24,20 @@
   tags:
     - consul
 
+- hosts: swarmhosts
+  tasks:
+    - docker_container:
+        image: "gliderlabs/registrator:latest"
+        name: registrator
+        restart_policy: always
+        recreate: true
+        command: "{{registrator_options | default(omit) }}"
+        volumes:
+          - "/var/run/docker.sock:/tmp/docker.sock"
+        network_mode: host
+      tags:
+        - registrator
+
 
 #- hosts: swarmhosts
 #  gather_facts: false

@@ -14,9 +14,31 @@
     - name: restart collectd
       service: name=collectd state=restarted
 
-- hosts: influxdb
-  roles:
-    - docker-influxdb
+- hosts: prometheus
+  tasks:
+    - name: ensure directory exists
+      file:
+        path: /dmi/data/prometheus
+        state: directory
+      tags:
+        - prometheus
+    - name: install config file
+      copy:
+        src: files/prometheus.yml
+        dest: /dmi/data/prometheus/prometheus.yml
+      tags:
+        - prometheus
+    - name: install prometheus
+      docker_container:
+        name: "prometheus"
+        image: "prom/prometheus"
+        recreate: true
+        ports:
+          - "9090:9090"
+        volumes:
+          - "/dmi/data/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      tags:
+        - prometheus
 
 - hosts: swarmhosts
   tasks:
@@ -34,7 +56,18 @@
         ports:
           - "8080:8080"
         command: ["-storage_driver=influxdb", "-storage_driver_db=cadvisor", "-storage_driver_host=influxdb.swarm:8086"]
-  tags: cadvisor
+    - name: install node-exporter
+      docker_container:
+        name: "node-exporter"
+        image: "prom/node-exporter"
+        restart_policy: always
+        ports:
+          - "9100:9100"
+        network_mode: host
+  tags:
+    - cadvisor
+    - node-exporter
+
 - hosts: grafana
   tasks:
     - name: install grafana

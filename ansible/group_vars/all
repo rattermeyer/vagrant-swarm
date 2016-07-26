@@ -1,4 +1,5 @@
 recreate_swarm: false
+registrator_options: ["-tags={{inventory_hostname}}", "consul://localhost:8500"] 
 influxdb_server: "master2.swarm"
 influxdb_port: "25826"
 docker_registry: "master1.swarm:5000"

@@ -45,6 +45,9 @@ dh[1:3]
 swarmmanager
 swarmmembers
 
+[prometheus]
+master3
+
 [influxdb]
 master2
 
