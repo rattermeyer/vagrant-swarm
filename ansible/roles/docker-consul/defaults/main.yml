@@ -14,3 +14,8 @@ consul_interface: "enp0s8"
 consul_ipaddress: "{{hostvars[inventory_hostname]['ansible_'+ consul_interface]['ipv4']['address']}}"
 consul_nodename: "{{inventory_hostname}}"
 consul_bootstrap_expect: 3
+# the following tokens are for master and consul agents
+acl_master_token: "c6d96535-9860-457c-a2bc-aeb7396dae07"
+acl_token: "1377957b-d2b1-4a64-ae51-de6ec53d5508"
+# the following token is used for external services allowing read access
+acl_read_token: "1e5b2f65-e2ea-4cb4-babc-606e811a4fba"

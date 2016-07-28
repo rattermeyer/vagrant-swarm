@@ -44,7 +44,14 @@
     mode: 0644
   notify:
     - Restart docker
-  when: docker_opts != "" 
+  when: docker_opts != ""
+
+- name: Add Proxy settings
+  lineinfile:
+    dest: "/etc/default/docker"
+    line: "export {{item.key}}={{item.value}}"
+    state: present
+  with_dict: "{{proxy_env | default (omit)}}"
 
 - name: Create systemd configuration directory for Docker service (systemd)
   file:
@@ -68,6 +75,15 @@
     - Reload systemd
     - Restart docker
   when: docker_opts != "" and ansible_distribution_version|version_compare(15.04, '>=')
+
+- name: Add Proxy settings
+  lineinfile:
+    dest: "/etc/systemd/system/docker.service.d/env.conf"
+    line: |
+      Environment="{{item.key}}={{item.value}}"
+    state: present
+  with_dict: "{{proxy_env | default (omit)}}"
+
 
 - name: Ensure docker daemon options used (systemd)
   template:

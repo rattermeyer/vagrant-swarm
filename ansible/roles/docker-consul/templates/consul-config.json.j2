@@ -21,13 +21,19 @@
         "rpc": "{{consul_ipaddress}}:{{consul_serverrpc_port}}",
         "serf_wan": "{{consul_ipaddress}}:{{consul_serfwan_port}}"
     },
-    {% if (consul_join is defined) and (consul_join_interval is defined) %}
+    {% if (consul_join is defined) and (consul_join_interval is defined) -%}
     "retry_join": {{consul_join | to_json }},
     "retry_interval": "{{consul_join_interval}}",
     "rejoin_after_leave": true,
-    {% endif %}
-    {% if consul_server %}
+    {% endif -%}
+    {% if consul_server -%}
     "bootstrap_expect": {{consul_bootstrap_expect}},
-    {% endif %}
+    "datacenter": "dc1",
+    "acl_datacenter": "dc1",
+    "acl_default_policy": "deny",
+    "acl_master_token": "{{acl_master_token}}",
+    {% else -%}
+    "acl_token": "{{acl_token}}",
+    {% endif -%}
     "node_name": "{{consul_nodename}}"
 }

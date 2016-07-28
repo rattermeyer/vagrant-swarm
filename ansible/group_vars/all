@@ -1,5 +1,5 @@
 recreate_swarm: false
-registrator_options: ["-tags={{inventory_hostname}}", "consul://localhost:8500"] 
+registrator_options: ["-tags={{inventory_hostname}}", "consul://localhost:8500"]
 influxdb_server: "master2.swarm"
 influxdb_port: "25826"
 docker_registry: "master1.swarm:5000"
@@ -10,6 +10,15 @@ consul_join:
   - "master1.swarm"
   - "master2.swarm"
   - "master3.swarm"
+# the following tokens are for master and consul agents
+acl_master_token: "c6d96535-9860-457c-a2bc-aeb7396dae07"
+acl_token: "1377957b-d2b1-4a64-ae51-de6ec53d5508"
+# the following token is used for external services allowing read access
+acl_read_token: "1e5b2f65-e2ea-4cb4-babc-606e811a4fba"
 dnsmasq_conflines:
   - "server=/swarm/192.168.56.10"
   - "server=/consul/192.168.56.11:8600"
+proxy_env:
+  http_proxy: http://proxy.muenster.de.root.net:8080
+  https_proxy: https://proxy.muenster.de.root.net:8080
+  no_proxy: .swarm

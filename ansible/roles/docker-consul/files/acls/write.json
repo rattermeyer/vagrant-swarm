@@ -1,0 +1,6 @@
+{
+  "Name": "allow-write-all",
+  "Type": "client",
+  "ID": "{{acl_token}}",
+  "Rules": ""
+}

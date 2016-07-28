@@ -1,0 +1,9 @@
+{
+  "ID":"{{acl_token}}",
+  "Name":"Write Token",
+  "Type":"client",
+  "Rules":"key \"\" { policy = \"write\"  } \
+  service \"\" { policy = \"write\" } \
+  event \"\" { policy = \"write\"} \
+  query \"\" { policy = \"write\"}"
+}

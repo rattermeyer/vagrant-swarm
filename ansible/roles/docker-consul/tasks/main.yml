@@ -42,4 +42,4 @@
     command:
       - "agent"
       - "-config-dir=/config"
-      - "-data-dir=/data"
+      - "-data-dir=/data"  

@@ -1,9 +1,20 @@
 ---
+- hosts: all
+  tasks:
+    - name: setting proxy environment
+      lineinfile:
+        dest: "/etc/environment"
+        line: "{{item.key}}={{item.value}}"
+        state: present
+      with_dict: "{{proxy_env}}"
+  tags: proxy
+
 - hosts: dockerhosts
   roles:
     - { role: docker-ubuntu-2, docker_group_members: ["vagrant"], kernel_update_and_reboot_permitted: true}
   tags:
     - docker
+  environment: "{{proxy_env | default(omit)}}"
 
 - hosts: all
   gather_facts: false
@@ -11,18 +22,53 @@
     - dnsmasq
   tags:
     - dnsmasq
+  environment: "{{proxy_env | default(omit)}}"
 
 - hosts: dockerregistry
   gather_facts: false
   roles:
     - { role: docker-registry, tags: ['docker-registry']}
     - { role: docker-images, tags: ['docker-images']}
+  tags:
+    - dockerregistry
+  environment: "{{proxy_env | default(omit)}}"
 
+#============ CONSUL ================================
 - hosts: consulhosts
   roles:
     - docker-consul
   tags:
     - consul
+  environment: "{{proxy_env | default(omit)}}"
+
+- hosts: controller
+  tasks:
+    - name: Create Read Token request body
+      set_fact:
+        body: "{{ lookup('file', 'acls/read.json') }}"
+    - name: create open acl
+      uri:
+        url: "http://master1.swarm:8500/v1/acl/update?dc=dc1&token={{acl_master_token}}"
+        method: PUT
+        body: "{{ body }}"
+        body_format: json
+        headers:
+          "Content-Type": "application/json"
+    - name: Create Write Token request body
+      set_fact:
+        body: "{{ lookup('file', 'acls/write.json') }}"
+    - name: create open acl
+      uri:
+        url: "http://master1.swarm:8500/v1/acl/update?dc=dc1&token={{acl_master_token}}"
+        method: PUT
+        body: "{{ body }}"
+        body_format: json
+        headers:
+          "Content-Type": "application/json"
+  tags:
+    - acls
+
+#======================================================
 
 - hosts: swarmhosts
   tasks:
@@ -37,6 +83,7 @@
         network_mode: host
       tags:
         - registrator
+  environment: "{{proxy_env | default(omit)}}"
 
 
 #- hosts: swarmhosts
@@ -74,6 +121,7 @@
       - name: debug
         debug: msg="{{secret}}"
       tags: swarm
+  environment: "{{proxy_env | default(omit)}}"
 - hosts: swarmmembers
   tasks:
     - block:
@@ -95,6 +143,7 @@
       tags:
         - swarm
         - swarm_join
+  environment: "{{proxy_env | default(omit)}}"
 #- hosts: vaults
 #  roles:
 #    - docker-vault

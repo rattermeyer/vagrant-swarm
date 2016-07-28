@@ -1,0 +1,7 @@
+{
+  "ID":"{{acl_read_token}}",
+  "Name":"Read Token",
+  "Type":"client",
+  "Rules":"key \"\" { policy = \"read\"  } \
+  service \"\" { policy = \"read\" }"
+}
