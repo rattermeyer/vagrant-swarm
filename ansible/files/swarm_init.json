@@ -1,5 +1,6 @@
 {
   "ListenAddr": "{{ listen_address | default('0.0.0.0:4500') }}",
+  "AdvertiseAddr": "192.168.56.11",
   "ForceNewCluster": {{ force_new_cluster | default('false') }},
   "Spec": {
     "AcceptancePolicy": {

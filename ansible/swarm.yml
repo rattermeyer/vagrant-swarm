@@ -122,6 +122,7 @@
         debug: msg="{{secret}}"
       tags: swarm
   environment: "{{proxy_env | default(omit)}}"
+  tags: swarm
 - hosts: swarmmembers
   tasks:
     - block:

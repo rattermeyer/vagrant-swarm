@@ -21,4 +21,4 @@ dnsmasq_conflines:
 proxy_env:
   http_proxy: http://proxy.muenster.de.root.net:8080
   https_proxy: https://proxy.muenster.de.root.net:8080
-  no_proxy: .swarm
+  no_proxy: "master1.swarm,master2.swarm,master3.swarm,dh1.swarm,dh2.swarm,dh3.swarm"
