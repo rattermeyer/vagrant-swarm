@@ -51,7 +51,8 @@
     dest: "/etc/default/docker"
     line: "export {{item.key}}={{item.value}}"
     state: present
-  with_dict: "{{proxy_env | default (omit)}}"
+  with_dict: "{{proxy_env | default ({})}}"
+  when: proxy_env is defined
 
 - name: Create systemd configuration directory for Docker service (systemd)
   file:
@@ -82,7 +83,7 @@
     line: |
       Environment="{{item.key}}={{item.value}}"
     state: present
-  with_dict: "{{proxy_env | default (omit)}}"
+  with_dict: "{{proxy_env | default ({})}}"
 
 
 - name: Ensure docker daemon options used (systemd)

@@ -1,12 +1,14 @@
 ---
 - hosts: all
   tasks:
-    - name: setting proxy environment
-      lineinfile:
-        dest: "/etc/environment"
-        line: "{{item.key}}={{item.value}}"
-        state: present
-      with_dict: "{{proxy_env}}"
+    - block:
+      - name: setting proxy environment
+        lineinfile:
+          dest: "/etc/environment"
+          line: "{{item.key}}={{item.value}}"
+          state: present
+        with_dict: "{{proxy_env | default({})}}"
+      when: proxy_env is defined
   tags: proxy
 
 - hosts: dockerhosts
@@ -14,7 +16,7 @@
     - { role: docker-ubuntu-2, docker_group_members: ["vagrant"], kernel_update_and_reboot_permitted: true}
   tags:
     - docker
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
 
 - hosts: all
   gather_facts: false
@@ -22,7 +24,7 @@
     - dnsmasq
   tags:
     - dnsmasq
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
 
 - hosts: dockerregistry
   gather_facts: false
@@ -31,7 +33,7 @@
     - { role: docker-images, tags: ['docker-images']}
   tags:
     - dockerregistry
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
 
 #============ CONSUL ================================
 - hosts: consulhosts
@@ -39,7 +41,7 @@
     - docker-consul
   tags:
     - consul
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
 
 - hosts: controller
   tasks:
@@ -83,7 +85,7 @@
         network_mode: host
       tags:
         - registrator
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
 
 
 #- hosts: swarmhosts
@@ -110,23 +112,49 @@
         uri:
           url: "http://master1.swarm:2375/swarm/init"
           method: POST
-          return_content: true
           HEADER_Content_Type: "application/json"
           body: "{{init_body }}"
           body_format: json
         register: swarm_init_result
         failed_when: swarm_init_result.status >= 500
-      - set_fact:
-          secret: "{{swarm_init_result.json}}"
+      - name: query swarm
+        uri:
+          url: "http://master1.swarm:2375/swarm"
+          method: GET
+          return_content: true
+        register: swarm_info
+      - name: "ensure directory exists"
+        local_action:
+          module: file
+          path: "{{secret_dir}}"
+          state: directory
+      - name: "saving swarm info"
+        local_action:
+          module: copy
+          content: "{{swarm_info.content}}"
+          dest: "{{secret_dir}}/swarm_info.json"
       - name: debug
-        debug: msg="{{secret}}"
+        debug: msg="{{swarm_info.content}}"
       tags: swarm
-  environment: "{{proxy_env | default(omit)}}"
+  environment: "{{proxy_env | default({})}}"
   tags: swarm
+  vars:
+    secret_dir: "/data/swarm"
 - hosts: swarmmembers
   tasks:
     - block:
-      - set_fact:
+      - name: "swarmmembers leaves swarm"
+        uri:
+          url: "http://{{inventory_hostname}}.swarm:2375/swarm/leave?force=1"
+          method: POST
+          return_content: true
+        when: recreate_swarm==true
+        ignore_errors: true
+      - name: "read secret"
+        set_fact:
+          swarm_info: "{{ lookup ( 'file', '{{secret_dir}}/swarm_info.json') }}"
+      - name: "define join body"
+        set_fact:
           join_body: "{{ lookup( 'file', 'swarm_join.json' ) }}"
       - debug: msg="{{join_body }}"
       - name: join swarm
@@ -144,7 +172,9 @@
       tags:
         - swarm
         - swarm_join
-  environment: "{{proxy_env | default(omit)}}"
+  vars:
+    secret_dir: "/data/swarm"
+  environment: "{{proxy_env | default({})}}"
 #- hosts: vaults
 #  roles:
 #    - docker-vault

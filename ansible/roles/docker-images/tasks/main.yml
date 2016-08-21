@@ -2,8 +2,8 @@
 # tasks file for docker-images
 - git: repo=https://github.com/rattermeyer/dockerfiles.git
        dest=/srv/dockerfiles
-       version=proxy
-       
+       version=master
+
 - name: Wait for Registry
   wait_for: host="master1.swarm" port=5000 delay=5 timeout=120
 
