@@ -1,2 +1,5 @@
 ---
 # defaults file for docker-images
+docker_images:
+  repo: https://github.com/rattermeyer/dockerfiles.git
+  version: master
