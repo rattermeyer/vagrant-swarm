@@ -18,7 +18,3 @@ acl_read_token: "1e5b2f65-e2ea-4cb4-babc-606e811a4fba"
 dnsmasq_conflines:
   - "server=/swarm/192.168.56.10"
   - "server=/consul/192.168.56.11:8600"
-#proxy_env:
-#  http_proxy: http://proxy.muenster.de.root.net:8080
-#  https_proxy: https://proxy.muenster.de.root.net:8080
-#  no_proxy: .swarm

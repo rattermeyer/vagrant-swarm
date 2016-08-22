@@ -1,6 +1,8 @@
 ---
 - hosts: all
   tasks:
+    - name: "show proxy_env"
+      debug: msg="{{proxy_env}}"
     - block:
       - name: setting proxy environment
         lineinfile:
@@ -10,6 +12,8 @@
         with_dict: "{{proxy_env | default({})}}"
       when: proxy_env is defined
   tags: proxy
+  vars_files:
+    - customization.yml
 
 - hosts: dockerhosts
   roles:
@@ -17,6 +21,8 @@
   tags:
     - docker
   environment: "{{proxy_env | default({})}}"
+  vars_files:
+    - customization.yml
 
 - hosts: all
   gather_facts: false
@@ -25,6 +31,8 @@
   tags:
     - dnsmasq
   environment: "{{proxy_env | default({})}}"
+  vars_files:
+    - customization.yml
 
 - hosts: dockerregistry
   gather_facts: false
@@ -34,6 +42,8 @@
   tags:
     - dockerregistry
   environment: "{{proxy_env | default({})}}"
+  vars_files:
+    - customization.yml
 
 #============ CONSUL ================================
 - hosts: consulhosts
@@ -42,6 +52,8 @@
   tags:
     - consul
   environment: "{{proxy_env | default({})}}"
+  vars_files:
+    - customization.yml
 
 - hosts: controller
   tasks:
@@ -69,6 +81,8 @@
           "Content-Type": "application/json"
   tags:
     - acls
+  vars_files:
+    - customization.yml
 
 #======================================================
 
@@ -86,6 +100,8 @@
       tags:
         - registrator
   environment: "{{proxy_env | default({})}}"
+  vars_files:
+    - customization.yml
 
 
 #- hosts: swarmhosts
@@ -140,6 +156,8 @@
   tags: swarm
   vars:
     secret_dir: "/data/swarm"
+  vars_files:
+    - customization.yml
 - hosts: swarmmembers
   tasks:
     - block:

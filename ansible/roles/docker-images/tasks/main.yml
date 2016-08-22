@@ -1,8 +1,9 @@
 ---
 # tasks file for docker-images
-- git: repo=https://github.com/rattermeyer/dockerfiles.git
-       dest=/srv/dockerfiles
-       version=master
+- git:
+    repo: "{{docker_images.repo}}"
+    version: "{{docker_images.version}}"
+    dest: /srv/dockerfiles
 
 - name: Wait for Registry
   wait_for: host="master1.swarm" port=5000 delay=5 timeout=120
