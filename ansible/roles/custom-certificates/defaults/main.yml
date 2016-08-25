@@ -1,0 +1,4 @@
+---
+# defaults file for custom-certificates
+ca_dir: ./ca
+cert_dir: ./ssl_certs
