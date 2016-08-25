@@ -29,13 +29,12 @@
     state: present
 
 - name: Create CA key
+  shell: openssl genrsa -aes256 -out {{ca_dir}}/private/ca-key.pem -passout pass:test123 4096
+- name: Create CA root certificate
   shell: >
     openssl req -new -x509 -days 3650
-    -config {{ca_dir}}/caconfig.conf -keyform PEM -keyout {{ca_dir}}/private/cakey.pem -outform PEM -out {{ca_dir}}/certs/careq.pem
-    -passin pass:test123 -passout pass:test123 -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de/E=cert@rattermeyer.de"
-- name: Create CA
-  shell: >
-    openssl ca -batch -passin pass:test123 -create_serial -out {{ca_dir}}/certs/cacert.pem -days 365 -keyfile {{ca_dir}}/private/cakey.pem -selfsign -config {{ca_dir}}/caconfig.conf -infiles {{ca_dir}}/certs/careq.pem -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de/E=cert@rattermeyer.de"
+    -config {{ca_dir}}/caconfig.conf -key {{ca_dir}}/private/ca-key.pem -outform PEM -out {{ca_dir}}/certs/ca-root.pem -sha512
+    -passin pass:test123 -passout pass:test123 -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Root CA/CN=rattermeyer.de/E=ca@rattermeyer.de"
 - name: Create priv key
   shell: openssl genrsa -out {{cert_dir}}/private/server_key.pem 4096
 - name: Create cert request
@@ -44,4 +43,4 @@
     -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de"
 - name: Sign cert
   shell: >
-    openssl x509 -days 3650 -CA {{ca_dir}}/certs/cacert.pem -CAkey {{ca_dir}}/private/cakey.pem -req -in {{cert_dir}}/server-req.pem -outform PEM -out {{cert_dir}}/public/cert.pem -CAserial {{ca_dir}}/serial -passin pass:test123
+    openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/server-req.pem -outform PEM -out {{cert_dir}}/public/server-cert.pem -CAserial {{ca_dir}}/serial -passin pass:test123
