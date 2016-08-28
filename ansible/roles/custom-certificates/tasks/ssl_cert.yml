@@ -1,9 +1,15 @@
-- name: Create priv key
-  shell: openssl genrsa -out {{cert_dir}}/private/server_key.pem 4096
-- name: Create cert request
-  shell: >
-    openssl req -new -key {{cert_dir}}/private/{{cert.name}}.pem -out {{cert_dir}}/{{cert.name}}-req.pem -passin pass:{{cert.key_pass}}
-    -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de"
-- name: Sign cert
-  shell: >
-    openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/{{cert.name}}-req.pem -outform PEM -out {{cert_dir}}/public/{{cert.name}}-cert.pem -CAserial {{ca_dir}}/serial -passin pass:{{cert.key_pass}}
+- name: test if cert exists already
+  stat: path="{{cert_dir}}/public/{{item.name}}-cert.pem"
+  register: cert_exists
+
+- block:
+  - name: Create priv key
+    shell: openssl genrsa -out {{cert_dir}}/private/{{cert.name}}.key 4096
+  - name: Create cert request
+    shell: >
+      openssl req -new -key {{cert_dir}}/private/{{cert.name}}.key -out {{cert_dir}}/{{cert.name}}-req.pem -passin pass:{{cert.key_pass}}
+      -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de"
+  - name: Sign cert
+    shell: >
+      openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/{{cert.name}}-req.pem -outform PEM -out {{cert_dir}}/public/{{cert.name}}-cert.pem -CAserial {{ca_dir}}/serial -passin pass:{{cert.key_pass}}
+  when: cert_exists.stat.exists == False

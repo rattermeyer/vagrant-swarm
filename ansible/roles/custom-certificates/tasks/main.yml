@@ -11,12 +11,18 @@
     - "{{ca_dir}}/newcerts"
     - "{{cert_dir}}/public"
     - "{{cert_dir}}/private"
+- name: "check if database.txt exists"
+  stat: path="{{ca_dir}}/database.txt"
+  register: ca_db_exists
+
 - file:
     path: "{{item}}"
     state: touch
   with_items:
     - "{{ca_dir}}/database.txt"
     - "{{ca_dir}}/database.txt.attr"
+  when: ca_db_exists.stat.exists == False
+
 - name: create CA config
   template:
     src: "caconfig.conf.j2"
