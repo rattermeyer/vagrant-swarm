@@ -21,26 +21,26 @@
   template:
     src: "caconfig.conf.j2"
     dest: "{{ca_dir}}/caconfig.conf"
-- name: Create Serial file
-  lineinfile:
-    line: "01\n"
-    dest: "{{ca_dir}}/serial"
-    create: True
-    state: present
+- name: Check for CA key
+  stat: path={{ca_dir}}/private/ca-key.pem
+  register: ca_key
 
-- name: Create CA key
-  shell: openssl genrsa -aes256 -out {{ca_dir}}/private/ca-key.pem -passout pass:test123 4096
-- name: Create CA root certificate
-  shell: >
-    openssl req -new -x509 -days 3650
-    -config {{ca_dir}}/caconfig.conf -key {{ca_dir}}/private/ca-key.pem -outform PEM -out {{ca_dir}}/certs/ca-root.pem -sha512
-    -passin pass:test123 -passout pass:test123 -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Root CA/CN=rattermeyer.de/E=ca@rattermeyer.de"
-- name: Create priv key
-  shell: openssl genrsa -out {{cert_dir}}/private/server_key.pem 4096
-- name: Create cert request
-  shell: >
-    openssl req -new -key {{cert_dir}}/private/server_key.pem -out {{cert_dir}}/server-req.pem -passin pass:test123
-    -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de"
-- name: Sign cert
-  shell: >
-    openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/server-req.pem -outform PEM -out {{cert_dir}}/public/server-cert.pem -CAserial {{ca_dir}}/serial -passin pass:test123
+- block:
+  - name: Create Serial file
+    lineinfile:
+      line: "01\n"
+      dest: "{{ca_dir}}/serial"
+      create: True
+      state: present
+  - name: Create CA key
+    shell: openssl genrsa -aes256 -out {{ca_dir}}/private/ca-key.pem -passout pass:test123 4096
+  - name: Create CA root certificate
+    shell: >
+      openssl req -new -x509 -days 3650
+      -config {{ca_dir}}/caconfig.conf -key {{ca_dir}}/private/ca-key.pem -outform PEM -out {{ca_dir}}/certs/ca-root.pem -sha512
+      -passin pass:test123 -subj "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Root CA/CN=rattermeyer.de/E=ca@rattermeyer.de"
+  when: ca_key.stat.exists == False
+
+- name: "include"
+  include: ssl_cert.yml cert="{{item}}"
+  with_items: "{{certs}}"

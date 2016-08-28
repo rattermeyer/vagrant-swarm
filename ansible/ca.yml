@@ -1,4 +1,9 @@
 ---
 - hosts: controller
   roles:
-    - custom-certificates
+    - role: custom-certificates
+      certs:
+        - name: "server"
+          lifetime: 365
+          key_pass: "test123"
+          subject: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=IT Dept/CN=rattermeyer.de"
