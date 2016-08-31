@@ -1,0 +1,21 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = {{cert.dn.country | default('DE')}}
+ST = {{cert.dn.state | default('NW')}}
+L = {{cert.dn.locality | default('Dorsten') }}
+O = {{cert.dn.organization | mandatory }}
+OU = {{cert.dn.orgunit | default('N_A')}}
+CN = {{cert.dn.cn  | default('N_A')}}
+[v3_req]
+keyUsage = {{cert.keyUsage | default('keyEncipherment, dataEncipherment')}}
+extendedKeyUsage = {{cert.extendedKeyUsage | default('serverAuth')}}
+{% if cert.alt_names is defined %}
+subjectAltName = @alt_names
+[alt_names]
+{% endif %}
+{% for alt_name in cert.alt_names | default([]) %}
+DNS.{{loop.index}} = alt_name
+{% endfor %}
