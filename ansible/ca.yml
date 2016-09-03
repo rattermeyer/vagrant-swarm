@@ -6,7 +6,6 @@
         - name: "docker-registry"
           lifetime: 365
           key_pass: "test123"
-          subject: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Registry/CN=registry.rattermeyer.de"
           dn: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Registry/CN=registry.rattermeyer.de"
           dn:
             country: DE
@@ -18,7 +17,6 @@
         - name: "docker-daemon"
           lifetime: 365
           key_pass: "test123"
-          subject: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Daemon/CN=*.swarm"
           dn:
             country: DE
             state: NRW
@@ -28,7 +26,6 @@
         - name: "docker-client"
           lifetime: 365
           key_pass: "test123"
-          subject: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Daemon/E=docker-client@swarm.local"
           dn:
             country: DE
             state: NRW
