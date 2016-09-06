@@ -11,11 +11,11 @@
     shell: openssl genrsa -out {{cert_dir}}/private/{{cert.name}}.key 4096
   - name: Create cert request
     shell: >
-      openssl req -new -key {{cert_dir}}/private/{{cert.name}}.key -out {{cert_dir}}/{{cert.name}}-req.pem -passin pass:{{cert.key_pass}}
+      openssl req -new -key {{cert_dir}}/private/{{cert.name}}.key -out {{cert_dir}}/{{cert.name}}.csr -passin pass:{{cert.key_pass}}
       -config "{{cert_dir}}/{{cert.name}}-req.conf"
   - name: Sign cert
     shell: >
-      openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/{{cert.name}}-req.pem -outform PEM -out {{cert_dir}}/public/{{cert.name}}-cert.pem -CAserial {{ca_dir}}/serial -passin pass:{{cert.key_pass}}
+      openssl x509 -days 365 -CA {{ca_dir}}/certs/ca-root.pem -CAkey {{ca_dir}}/private/ca-key.pem -req -in {{cert_dir}}/{{cert.name}}.csr  -extensions server_cert -extfile {{ca_dir}}/caconfig.conf -outform PEM -out {{cert_dir}}/public/{{cert.name}}-cert.pem -CAserial {{ca_dir}}/serial -passin pass:{{cert.key_pass}}
   - name: Create PKCS 12
     shell:
       openssl pkcs12 -export -clcerts -in {{cert_dir}}/public/{{cert.name}}-cert.pem -inkey {{cert_dir}}/private/{{cert.name}}.key -out {{cert_dir}}/private/{{cert.name}}.p12 -passout pass:{{cert.key_pass}}

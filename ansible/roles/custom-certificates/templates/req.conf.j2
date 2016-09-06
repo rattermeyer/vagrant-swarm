@@ -12,10 +12,13 @@ CN = {{cert.dn.cn  | default('N_A')}}
 [v3_req]
 keyUsage = {{cert.keyUsage | default('keyEncipherment, dataEncipherment')}}
 extendedKeyUsage = {{cert.extendedKeyUsage | default('serverAuth')}}
-{% if cert.alt_names is defined %}
+{% if cert.dns_alt_names is defined or cert.ip_alt_names is defined %}
 subjectAltName = @alt_names
 [alt_names]
 {% endif %}
-{% for alt_name in cert.alt_names | default([]) %}
-DNS.{{loop.index}} = alt_name
+{% for alt_name in cert.dns_alt_names | default([]) %}
+DNS.{{loop.index}} = {{alt_name}}
+{% endfor %}
+{% for alt_name in cert.ip_alt_names | default([]) %}
+IP.{{loop.index}} = {{alt_name}}
 {% endfor %}

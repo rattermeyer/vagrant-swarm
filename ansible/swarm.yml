@@ -16,6 +16,42 @@
     - customization.yml
 
 - hosts: dockerhosts
+  pre_tasks:
+    - name: ensure directories exists
+      file:
+        path: "{{item}}"
+        state: directory
+      with_items:
+        - "/opt/certs/ca/certs"
+        - "/opt/certs/ssl_certs/"
+
+    - name: copy docker daemon certs and keys
+      copy:
+        src: "{{item.src}}"
+        dest: "{{item.dest}}"
+      with_items:
+        - { src: /opt/certs/ca/certs/ca-root.pem, dest: /opt/certs/ca/certs/ca-root.pem }
+        - { src: /opt/certs/ssl_certs/public/docker-registry-cert.pem, dest: /opt/certs/ssl_certs/docker-registry-cert.pem }
+        - { src: /opt/certs/ssl_certs/private/docker-registry.key, dest: /opt/certs/ssl_certs/docker-registry.key }
+    - block:
+      - name: ensure .docker directory exists
+        file:
+          path: "/home/{{item}}/.docker"
+          owner: "{{item}}"
+          state: directory
+        with_items:
+          - ["vagrant"]
+      - name: copy cert, ca and key
+        copy:
+          src: "{{item[0].src}}"
+          dest: "/home/{{item[1]}}/.docker/{{item[0].dest}}"
+          owner: "{{item[1]}}"
+        with_nested:
+          -
+            - { src: /opt/certs/ca/certs/ca-root.pem, dest: "ca.pem"}
+            - { src: /opt/certs/ssl_certs/private/docker-client.key, dest: "key.pem"}
+            - { src: /opt/certs/ssl_certs/public/docker-client-cert.pem, dest: "cert.pem"}
+          - ["vagrant"]
   roles:
     - { role: docker-ubuntu-2, docker_group_members: ["vagrant"], kernel_update_and_reboot_permitted: true}
   tags:

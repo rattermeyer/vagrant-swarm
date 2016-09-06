@@ -2,11 +2,12 @@
 - hosts: controller
   roles:
     - role: custom-certificates
+      ca_dir: /opt/certs/ca
+      cert_dir: /opt/certs/ssl_certs
       certs:
         - name: "docker-registry"
           lifetime: 365
           key_pass: "test123"
-          dn: "/C=DE/ST=NRW/L=Dorsten/O=DevOps Architect/OU=Registry/CN=registry.rattermeyer.de"
           dn:
             country: DE
             state: NRW
@@ -23,6 +24,13 @@
             locality: Dorsten
             organization: DevOps Architect
             orgunit: docker-daemon
+          ip_alt_names:
+            - 192.168.56.11
+            - 192.168.56.12
+            - 192.168.56.13
+            - 192.168.56.21
+            - 192.168.56.22
+            - 192.168.56.23
         - name: "docker-client"
           lifetime: 365
           key_pass: "test123"
